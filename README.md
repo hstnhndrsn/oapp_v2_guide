@@ -15,8 +15,8 @@
 ## Table of Contents
 
 - [Prerequisite Knowledge](#prerequisite-knowledge)
-  - [What is an OApp](#what-is-an-oapp)
   - [How does LayerZero Work](#how-does-layerzero-work)
+  - [What is an OApp](#what-is-an-oapp)
 - [Requirements](#requirements)
 - [Scaffold this example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -37,6 +37,35 @@
   - [Troubleshooting](#troubleshooting)
 
 ## Prerequisite Knowledge
+### How does LayerZero work
+
+- What is LayerZero?
+  - LayerZero is an omnichain messaging protocol — a permissionless, open framework designed to securely move information between blockchains. It empowers any application to bring its own security, execution, and cross-chain interaction, providing a predictable and adaptable foundation for decentralized applications living on multiple networks.
+
+- Before LayerZero
+
+  - Before LayerZero, cross-chain communication was a patchwork of monolithic bridges and isolated solutions. Achieving true cross-chain communication was a complex and often fragile endeavor.
+
+  - Traditional methods relied on monolithic bridges with centralized verifiers or a fixed set of signers — approaches that imposed rigid structures and created single points of failure. When any component of these systems faltered, every connected application was put at risk, stifling innovation and leaving developers scrambling for secure solutions.
+
+- The LayerZero Framework
+  - LayerZero redefines cross-chain interactions by combining several key architectural elements:
+
+- Immutable Smart Contracts:
+  - Non-upgradeable endpoint contracts are deployed on each blockchain. These immutable contracts serve as secure entry and exit points for messages, ensuring consistency and trust across all networks.
+
+- Configurable Message Libraries:
+  - LayerZero offers flexible libraries that developers can select to tailor the way messages are emitted off-chain. This adaptability means applications can optimize message formatting and handling according to specific needs without being tied to a one-size-fits-all solution.
+
+- Modular Security Owned by the Application:
+  - Instead of relying on a centralized verifier network, LayerZero enables each application to configure its own security stack. Developers can choose from various decentralized verifier networks (DVNs) and set parameters like finality and execution rules. This modular approach shifts control to the application, allowing for tailored security that evolves with emerging technologies.
+
+- Permissionless Execution:
+  - By making the execution of cross-chain messages available to anyone, LayerZero ensures that once a message is verified, it can be executed without gatekeepers. This open design removes bottlenecks and facilitates seamless interaction across the blockchain mesh.
+
+**Together, these elements create a robust foundation that makes the following primitives possible.**
+
+
 ### What is an OApp
 
 - Generic Message Passing
@@ -91,8 +120,6 @@
   - Aptos Move:
     - The Move-based OApp splits the logic into modular components (such as oapp::oapp, oapp::oapp_core, oapp::oapp_receive, and oapp::oapp_compose). Each module encapsulates parts of the messaging process—from fee quoting to message composition—while preserving the same overall flow.
 
-### How does LayerZero work
-  * https://docs.layerzero.network/v2/concepts/protocol/core-concepts
 
 ## Requirements
 

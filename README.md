@@ -276,7 +276,7 @@ pnpm hardhat lz:oapp:send --dst-eid 40245 --string 'Hello from Arbitrum!' --netw
 
 > :information_source: `40245` and `40231` are the Endpoint IDs of Base Sepolia and Arbitrum Sepolia respectively. The source network is determined by the `--network` flag, not a separate `--src-eid` parameter. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
-Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
+Upon a successful send, the script will provide you with the link to the message on [LayerZero Scan](https://layerzeroscan.com/).
 
 Once the message is delivered, you will be able to click on the destination transaction hash to verify that the message was received.
 

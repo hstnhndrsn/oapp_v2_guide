@@ -10,7 +10,7 @@
 
 <h1 align="center">Omnichain Application (OApp) Example</h1>
 
-<p align="center">Template project for creating custom omnichain applications (<a href="https://docs.layerzero.network/v2/concepts/applications/oapp-standard">OApp</a>) powered by the LayerZero protocol. This example demonstrates how to build applications that can send and receive arbitrary messages across different blockchains.</p>
+<p align="center">Template project for creating custom omnichain applications (<a href="https://docs.layerzero.network/v2/concepts/applications/oapp-standard">OApp</a>) powered by the LayerZero protocol. This example is a verbose demonstration of how to build applications that can send and receive arbitrary messages across different blockchains.</p>
 
 ## Table of Contents
 
@@ -37,6 +37,14 @@
 ## Prerequisite Knowledge
 
 - [What is an OApp (Omnichain Application)?](https://docs.layerzero.network/v2/concepts/applications/oapp-standard)
+
+-Generic Message Passing
+  -Send & receive interface:
+    -An OApp provides interface methods to send messages (by encoding data into a payload) and receive messages (by decoding that payload and executing business logic) via the LayerZero protocol. This abstraction lets you use the same messaging pattern for a variety of use cases (e.g., DeFi, DAOs, NFT transfers).
+
+  -Custom logic on receipt:
+    -Each OApp is designed so that developers can plug in their application-specific logic into the message‐handling functions. Whether you’re transferring tokens, votes, or some other data-type, the core design remains the same.
+
 - [How does LayerZero work?](https://docs.layerzero.network/v2/concepts/protocol/core-concepts)
 
 ## Requirements

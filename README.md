@@ -15,6 +15,8 @@
 ## Table of Contents
 
 - [Prerequisite Knowledge](#prerequisite-knowledge)
+  - [What is an OApp](#what-is-an-oapp)
+  - [How does LayerZero Work](#how-does-layerzero-work)
 - [Requirements](#requirements)
 - [Scaffold this example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -35,6 +37,7 @@
   - [Troubleshooting](#troubleshooting)
 
 ## Prerequisite Knowledge
+### What is an OApp
 
 - Generic Message Passing
   - Send & receive interface:
@@ -67,8 +70,30 @@
   - Endpoint Integration:
     - All cross-chain messages are sent via a standardized protocol endpoint, which handles the low-level message routing, verification management, and fee management. This endpoint acts as the bridge between disparate chains.
 
+- Administrative and Security Controls
+  - Admin and delegate roles:
+    - The OApp design includes built-in roles for managing and configuring the application. Typically, the contract owner (or admin) holds the authority to update peers, set execution configurations, or transfer admin rights. A separate role, the delegate, can be used to manage critical operations like security configuration updates and block finality settings.
 
-- [How does LayerZero work?](https://docs.layerzero.network/v2/concepts/protocol/core-concepts)
+- Security measures:
+  - Since cross-chain operations carry extra risk, developers are encouraged to use additional safeguards (e.g., governance controls, multisig wallets, or timelocks) to secure critical roles like the delegate and admin to prevent unauthorized changes.
+
+- Composition (Re-entrancy & Extended Flows)
+  - Message composition:
+    - Beyond simple send/receive operations, the standard can also support composing messages. This “compose” feature allows an OApp to trigger a subsequent call to itself or another contract after a message has been delivered. This is particularly useful for advanced use cases where the cross-chain message results in a series of actions rather than a single event.
+
+- VM-Specific Implementation Notes
+
+  - EVM:
+    - The OApp is implemented via Solidity contracts. Developers inherit from base contracts like OApp.sol that provide a complete messaging interface (including enforced options and fee quoting) while allowing custom logic in the _lzReceive function.
+
+  - Solana:
+    - Instead of inheritance, Solana relies on Cross Program Invocation (CPI) where the LayerZero Endpoint CPI is used. Developers build their OApp program around a set of core instructions that mirror the send/receive flow.
+
+  - Aptos Move:
+    - The Move-based OApp splits the logic into modular components (such as oapp::oapp, oapp::oapp_core, oapp::oapp_receive, and oapp::oapp_compose). Each module encapsulates parts of the messaging process—from fee quoting to message composition—while preserving the same overall flow.
+
+### How does LayerZero work
+  * https://docs.layerzero.network/v2/concepts/protocol/core-concepts
 
 ## Requirements
 

@@ -197,12 +197,13 @@ Select all the chains you want to deploy the OApp to.
 
 ## Enable Messaging
 - Wire / Wiring
-  - "Wiring" in LayerZero refers to the process of connecting OApps across different blockchains to enable cross-chain communication. The process involves setting peer addresses between OApps, configuring DVNs, and message execution settings. All these actions are done via submitting transactions to the relevant contracts (e.g. OApp, Endpoint) on each chain. Once wired, contracts can send and receive messages between specific source and destination contracts.
+  - `Wiring` in LayerZero refers to the process of connecting OApps across different blockchains to enable cross-chain communication. The process involves setting peer addresses between OApps, configuring DVNs, and message execution settings. All these actions are done via submitting transactions to the relevant contracts (e.g. OApp, Endpoint) on each chain. Once wired, contracts can send and receive messages between specific source and destination contracts.
 
 After deploying the OApp on the respective chains, you must run the wiring task to enable messaging.
 
+First create a new or modify the existing layerzero config file.
 
-layerzero.config.ts
+`layerzero.config.ts`
 
 ```typescript
 import {ExecutorOptionType} from '@layerzerolabs/lz-v2-utilities';

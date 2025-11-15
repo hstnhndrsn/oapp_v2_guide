@@ -27,6 +27,7 @@
 - [Enable Messaging](#enable-messaging)
 - [Sending Messages](#sending-messages)
 - [Next Steps](#next-steps)
+  - [Security Stack DVNS](#security0stack-dvns)
 - [Production Deployment Checklist](#production-deployment-checklist)
 - [Appendix](#appendix)
   - [Running Tests](#running-tests)
@@ -289,6 +290,7 @@ Congratulations, you have now sent a message cross-chain!
 Now that you've gone through a simplified walkthrough, here are what you can do next.
 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
+### Security Stack DVNS
 - Security Stack (DVNs)
   - Every application built on top of the LayerZero protocol can configure a unique messaging channel.
 

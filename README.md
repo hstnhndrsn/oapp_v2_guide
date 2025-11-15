@@ -28,6 +28,7 @@
 - [Sending Messages](#sending-messages)
 - [Next Steps](#next-steps)
   - [Security Stack DVNS](#security0stack-dvns)
+  - [Message Execution Options](#message-execution-options)
 - [Production Deployment Checklist](#production-deployment-checklist)
 - [Appendix](#appendix)
   - [Running Tests](#running-tests)
@@ -336,6 +337,7 @@ Since “DVN” broadly describes any verification mechanism that securely deliv
 | Default Send and Receive C | requiredDVNs: [ Dead DVN, LayerZero Labs ] | LayerZero Labs |
 
 
+### Message Execution Options
 - Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
 
 

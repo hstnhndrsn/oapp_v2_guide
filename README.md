@@ -190,13 +190,64 @@ To deploy the OApp contracts to your desired blockchains, run the following comm
 pnpm hardhat lz:deploy --tags MyOApp
 ```
 
+
 Select all the chains you want to deploy the OApp to.
 
+> **Warning:** Using lz:deploy without `tags` will result in all deployment scripts being executed. 
+
 ## Enable Messaging
+- Wire / Wiring
+  - "Wiring" in LayerZero refers to the process of connecting OApps across different blockchains to enable cross-chain communication. The process involves setting peer addresses between OApps, configuring DVNs, and message execution settings. All these actions are done via submitting transactions to the relevant contracts (e.g. OApp, Endpoint) on each chain. Once wired, contracts can send and receive messages between specific source and destination contracts.
 
-After deploying the OApp on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
+After deploying the OApp on the respective chains, you must run the wiring task to enable messaging.
 
-> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/tools/simple-config), which is recommended over manual configuration.
+
+layerzero.config.ts
+
+```typescript
+import {ExecutorOptionType} from '@layerzerolabs/lz-v2-utilities';
+import {OAppEnforcedOption, OmniPointHardhat} from '@layerzerolabs/toolbox-hardhat';
+import {EndpointId} from '@layerzerolabs/lz-definitions';
+import {generateConnectionsConfig} from '@layerzerolabs/metadata-tools';
+
+const avalancheContract: OmniPointHardhat = {
+  eid: EndpointId.AVALANCHE_V2_TESTNET,
+  contractName: 'MyOFT',
+};
+
+const polygonContract: OmniPointHardhat = {
+  eid: EndpointId.AMOY_V2_TESTNET,
+  contractName: 'MyOFT',
+};
+
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+  {
+    msgType: 1,
+    optionType: ExecutorOptionType.LZ_RECEIVE,
+    gas: 80000,
+    value: 0,
+  },
+];
+
+export default async function () {
+  // note: pathways declared here are automatically bidirectional
+  // if you declare A,B there's no need to declare B,A
+  const connections = await generateConnectionsConfig([
+    [
+      avalancheContract, // Chain A contract
+      polygonContract, // Chain B contract
+      [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+      [1, 1], // [A to B confirmations, B to A confirmations]
+      [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
+    ],
+  ]);
+
+  return {
+    contracts: [{contract: avalancheContract}, {contract: polygonContract}],
+    connections,
+  };
+}
+```
 
 Run the wiring task:
 

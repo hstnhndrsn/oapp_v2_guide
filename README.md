@@ -289,6 +289,23 @@ Congratulations, you have now sent a message cross-chain!
 Now that you've gone through a simplified walkthrough, here are what you can do next.
 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
+- Security Stack (DVNs)
+  - Every application built on top of the LayerZero protocol can configure a unique messaging channel.
+
+  -Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
+
+  - Each DVN independently verifies the payloadHash of each message to ensure integrity. Once the designated DVN threshold has been reached, the message nonce can be marked as verified and inserted into the destination Endpoint for execution.
+
+  - Each DVN applies its own verification method to check that the payloadHash is correct. Once the required DVNs and optionally a sufficient number of optional DVNs have confirmed the payloadHash, any authorized caller (for example, an Executor) can commit the message nonce into the destination Endpoint’s messaging channel for execution.
+
+| Message Nonce | Description |
+|---------------|-------------|
+| 1 | The Security Stack has verified the payloadHash and the nonce has been committed to the Endpoint's messaging channel. |
+| 2 | All configured DVNs have verified the payloadHash, but no caller has yet committed the nonce to the Endpoint's messaging channel. |
+| 3 | Two required and one optional DVN have verified the payloadHash, meeting the security threshold, but the nonce has not yet been committed. |
+| 4 | Even though the optional DVN threshold is met, the Security Stack requires that every required DVN (e.g. DVNᴬ) must verify the payloadHash before the nonce can be committed. |
+| 5 | Only the required DVNs (e.g. DVNᴬ, DVNᴮ) have verified the payloadHash; none of the optional verifiers have submitted their proof. |
+| 6 | Both the required DVNs and the optional threshold have verified the payloadHash, but no caller has committed the nonce to the Endpoint's messaging channel yet. |
 - Read on [DVNs / Security Stack](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns)
 - Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
 

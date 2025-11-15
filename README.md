@@ -64,8 +64,7 @@
   - Trusted peers:
     - Every deployed OApp must set up trusted peers on the destination chains. This pairing (stored as a simple mapping) tells the protocol where to send messages to or expect messages from.
 
-* info
-* The peer’s address is stored in a format (such as bytes32) that is interoperable between VMs.
+> **Info:** The peer’s address is stored in a format (such as bytes32) that is interoperable between VMs.
 
   - Endpoint Integration:
     - All cross-chain messages are sent via a standardized protocol endpoint, which handles the low-level message routing, verification management, and fee management. This endpoint acts as the bridge between disparate chains.

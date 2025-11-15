@@ -339,7 +339,7 @@ Since “DVN” broadly describes any verification mechanism that securely deliv
 
 ### Message Execution Options
 - Message Options
-  - In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers (like [DVNs](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns) and [Executors](https://docs.layerzero.network/v2/concepts/permissionless-execution/executors)) can understand.
+  - In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers (like [DVNs](#security-stack-dvns) and [Executors](https://docs.layerzero.network/v2/concepts/permissionless-execution/executors)) can understand.
 
   - Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
 
@@ -356,8 +356,6 @@ Since “DVN” broadly describes any verification mechanism that securely deliv
 
   - The LayerZero messaging library understands how to break apart the options and route them to the correct workers. Since applications can configure message libraries, this design is modular, as new types of workers and options can be added over time without changing the core protocol.
 
-See the [OptionsBuilder](https://docs.layerzero.network/v2/tools/sdks/options) library and SDK to learn more about the specific encoding of options.
-
 - Enforcing Options
   - Some applications may require strict guarantees on how their messages are handled. Without this enforcement, users could accidentally (or maliciously) send messages that fail to execute, leading to a poor user experience or even stuck tokens.
 
@@ -373,17 +371,82 @@ See the [OptionsBuilder](https://docs.layerzero.network/v2/tools/sdks/options) l
 
 This concept is especially important in applications like token bridges, composable smart contracts, or stateful protocols where execution must be predictable and reliable.
 
-<div style="background-color: #f0f8ff; border-left: 4px solid #007acc; padding: 10px; margin: 10px 0;">
+- Why would a user want to add extra options?
+  - Take the example of an Omnichain Token (OFT) that supports Omnichain Composability; allowing the token to trigger additional logic after being received. This logic might involve calling another contract, performing swaps, or interacting with a dApp on the destination chain.
+
+  - In this case, the user might want to pay for:
+
+    - A required amount of gas to ensure lzReceive() succeeds (enforced by the app).
+
+    - Extra gas to support additional post-processing via lzCompose() (added by the user).
+
+By adding these extra options, users pay to extend the functionality without modifying the underlying application logic.
+
+- Why Do Options Matter?
+    - When sending a cross-chain message, the source chain has no direct knowledge of the destination chain’s state: things like how much gas is needed, what the native currency is, or how the contract should be called.
+
+    - Options solve this by letting the sender provide detailed instructions about how the message should be processed once it arrives.
+
+    - Some common examples include:
+
+      - Execution Gas: Telling the Executor how much gas or native token the destination contract will need during lzReceive().
+
+      - Composer Gas: Adding gas or native tokens for the composer contract when calling calling lzCompose().
+
+      - Native Token Drops: Sending native tokens (like ETH or APT) separately from the message.
+
+These instructions are interpreted by the off-chain workers, so that the message is handled as expected.
+
+
+- Key Takeaways
+  - options are serialized instructions that help off-chain workers understand how to process a message.
+
+  - Each type of worker (DVN, Executor, etc.) looks for specific options relevant to their task.
+
+  - Applications can enforce options to require correct behavior on source.
+
+  - Users can extend options for extra functionality on destination.
+
+  - The LayerZero protocol’s modular design means it can support new worker types without breaking existing behavior.
+
+<div style="background-color: #99a0a5ff; border-left: 4px solid #007acc; padding: 10px; margin: 10px 0;">
 
 **Info:** Enforcing options means your application checks that users provide the correct options when calling the Endpoint's send() method. However, this does NOT guarantee that the specified instructions (e.g., gas limits or native drops) will be executed as intended by the worker or respected by permissionless callers on the destination chain.
 
 If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your _lzReceive() or lzCompose() logic.
+</div>
+
+### Generating Options 
+Generating Options is possible using typescript or solidity as follows: 
+
+  ```typescript 
+  import {Options} from '@layerzerolabs/lz-v2-utilities';
+
+  const options = Options.newOptions().addExecutorLzReceiveOption(gas_limit, msg_value).toBytes();
+  ```
+
+  ```solidity
+  using OptionsBuilder for bytes;
+
+  bytes memory options = OptionsBuilder.newOptions()
+    .addExecutorLzReceiveOption(50000, 0)
+    .toBytes();
+  ```
+
+<div style="background-color: #99a0a5ff; border-left: 4px solid #007acc; padding: 10px; margin: 10px 0;">
+
+**Caution:** Since the return data size is not known to the Executor ahead of time, you must estimate the expected response data size. This size is priced into the Executor's fee formula. Failure to correctly estimate the return data size will result in the Executor not delivering the response.
 
 </div>
 
-- Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
+- Best Practices
+  - Gas Profiling: Always profile your contract's gas usage on each target chain
+  - Conservative Estimates: Start with higher gas limits and adjust down
+  - Chain-Specific Testing: Test thoroughly on each target chain
+  - Native Caps: Check Executor's native cap for each pathway
+  - Multiple Options: Consider combining options for complex scenarios
 
-
+See the [OptionsBuilder](https://docs.layerzero.network/v2/tools/sdks/options) library and SDK to learn more about the specific encoding of options.
 
 ## Production Deployment Checklist
 

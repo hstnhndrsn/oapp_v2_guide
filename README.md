@@ -135,16 +135,14 @@ Create your local copy of this example:
 pnpm dlx create-lz-oapp@latest --example oapp
 ```
 
-Specify the directory: 
-```bash 
-Where do you want to start your project? › ./my-lz-oapp
-```
+Specify the directory:
+
+> Where do you want to start your project? › ./my-lz-oapp
 
 select `OApp` and proceed with the installation:
-```bash 
-Which example would you like to use as a starting point? › - Use arrow-keys. Return to submit.
-❯   OApp
-```
+
+> Which example would you like to use as a starting point? › - Use arrow-keys. Return to submit.
+> ❯   OApp
 
 Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
 

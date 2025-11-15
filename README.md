@@ -308,8 +308,37 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 | 4 | Even though the optional DVN threshold is met, the Security Stack requires that every required DVN (e.g. DVNᴬ) must verify the payloadHash before the nonce can be committed. |
 | 5 | Only the required DVNs (e.g. DVNᴬ, DVNᴮ) have verified the payloadHash; none of the optional verifiers have submitted their proof. |
 | 6 | Both the required DVNs and the optional threshold have verified the payloadHash, but no caller has committed the nonce to the Endpoint's messaging channel yet. |
-- Read on [DVNs / Security Stack](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns)
+
+- Verification Model
+  - Each DVN can use its own verification method to confirm that the payloadHash correctly represents the message contents. This design allows application owners to tailor their Security Stack based on the desired security level and cost–efficiency tradeoffs. For an extensive list of DVNs available for integration, see DVN Addresses.
+
+- DVN Adapters
+  - DVN Adapters enable the integration of third-party generic message passing networks, such as native asset bridges, middlechains, or other specialized verification systems. With DVN Adapters, applications can incorporate diverse security models into their Security Stack, broadening the spectrum of available configurations while still ensuring a consistent verification interface via the payloadHash.
+
+Since “DVN” broadly describes any verification mechanism that securely delivers a message’s payloadHash to the destination Message Library, application owners have the flexibility to integrate with virtually any infrastructure that meets their security requirements.
+
+- Configuring the Security Stack
+  - Every LayerZero Endpoint can be used to send and receive messages. Because of that, each Endpoint has a separate Send and Receive Configuration, which an OApp can configure per remote Endpoint (i.e., the messaging channel, sending to that remote chain, receiving from that remote chain).
+
+  - For a configuration to be considered valid, the Send Library configurations on Chain A must match the Receive Library configurations on Chain B.
+
+- Default Configuration
+  - For each new channel, LayerZero provides a placeholder configutation known as the default. If you provide no configuration settings, the protocol will fallback to the default configuration.
+
+  - This default configuration can vary per channel, changing the placeholder block confirmations, the X‑of‑Y‑of‑N thresholds for verification, the Executor, and the message libraries.
+
+  - A default pathway configuration will typically have one of the following preset Security Stack configurations within SendULN302 and ReceiveUlN302:
+
+| Security Stack | DVNs | Executor |
+|---------------|------|----------|
+| Default Send and Receive A | requiredDVNs: [ Google Cloud, LayerZero Labs ] | LayerZero Labs |
+| Default Send and Receive B | requiredDVNs: [ Polyhedra, LayerZero Labs ] | LayerZero Labs |
+| Default Send and Receive C | requiredDVNs: [ Dead DVN, LayerZero Labs ] | LayerZero Labs |
+
+
 - Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
+
+
 
 ## Production Deployment Checklist
 

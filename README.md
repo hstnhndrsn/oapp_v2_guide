@@ -338,6 +338,49 @@ Since “DVN” broadly describes any verification mechanism that securely deliv
 
 
 ### Message Execution Options
+- Message Options
+  - In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers (like [DVNs](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns) and [Executors](https://docs.layerzero.network/v2/concepts/permissionless-execution/executors)) can understand.
+
+  - Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
+
+  - Options are how applications communicate verification and execution preferences to the off-chain workers that carry out cross-chain messages.
+
+- How Does LayerZero Route Options?
+  - When an application sends a message through LayerZero, it includes a field called options. This field is a compact, structured byte array that can contain multiple worker-specific instructions. LayerZero doesn’t interpret these options directly; instead, it forwards them to the appropriate service providers (called workers) that know how to read and act on the instructions.
+
+  - The workers typically fall into two categories:
+
+    - Decentralized Verifier Networks (DVNs): These provide verification to ensure the message is valid and has not been tampered with.
+
+    - Executors: These are responsible for delivering and executing the message on the destination chain.
+
+  - The LayerZero messaging library understands how to break apart the options and route them to the correct workers. Since applications can configure message libraries, this design is modular, as new types of workers and options can be added over time without changing the core protocol.
+
+See the [OptionsBuilder](https://docs.layerzero.network/v2/tools/sdks/options) library and SDK to learn more about the specific encoding of options.
+
+- Enforcing Options
+  - Some applications may require strict guarantees on how their messages are handled. Without this enforcement, users could accidentally (or maliciously) send messages that fail to execute, leading to a poor user experience or even stuck tokens.
+
+  - To prevent this, applications can enforce options. Enforcement means the application itself verifies and guarantees that a specific set of options is always present and correctly formatted before the message is allowed to be sent.
+
+  - Enforced options helps by:
+
+    - Preventing underfunded executions that would otherwise fail on the destination chain.
+
+    - Protecting users who omit critical options for a specific application use case.
+
+    - Providing a consistent baseline experience regardless of the sender’s intent.
+
+This concept is especially important in applications like token bridges, composable smart contracts, or stateful protocols where execution must be predictable and reliable.
+
+<div style="background-color: #f0f8ff; border-left: 4px solid #007acc; padding: 10px; margin: 10px 0;">
+
+**Info:** Enforcing options means your application checks that users provide the correct options when calling the Endpoint's send() method. However, this does NOT guarantee that the specified instructions (e.g., gas limits or native drops) will be executed as intended by the worker or respected by permissionless callers on the destination chain.
+
+If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your _lzReceive() or lzCompose() logic.
+
+</div>
+
 - Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
 
 

@@ -51,17 +51,17 @@
 - The LayerZero Framework
   - LayerZero redefines cross-chain interactions by combining several key architectural elements:
 
-  - Immutable Smart Contracts:
-    - Non-upgradeable endpoint contracts are deployed on each blockchain. These immutable contracts serve as secure entry and exit points for messages, ensuring consistency and trust across all networks.
+    - Immutable Smart Contracts:
+      - Non-upgradeable endpoint contracts are deployed on each blockchain. These immutable contracts serve as secure entry and exit points for messages, ensuring consistency and trust across all networks.
 
-  - Configurable Message Libraries:
-    - LayerZero offers flexible libraries that developers can select to tailor the way messages are emitted off-chain. This adaptability means applications can optimize message formatting and handling according to specific needs without being tied to a one-size-fits-all solution.
+    - Configurable Message Libraries:
+      - LayerZero offers flexible libraries that developers can select to tailor the way messages are emitted off-chain. This adaptability means applications can optimize message formatting and handling according to specific needs without being tied to a one-size-fits-all solution.
 
-  - Modular Security Owned by the Application:
-    - Instead of relying on a centralized verifier network, LayerZero enables each application to configure its own security stack. Developers can choose from various decentralized verifier networks (DVNs) and set parameters like finality and execution rules. This modular approach shifts control to the application, allowing for tailored security that evolves with emerging technologies.
+    - Modular Security Owned by the Application:
+      - Instead of relying on a centralized verifier network, LayerZero enables each application to configure its own security stack. Developers can choose from various decentralized verifier networks (DVNs) and set parameters like finality and execution rules. This modular approach shifts control to the application, allowing for tailored security that evolves with emerging technologies.
 
-  - Permissionless Execution:
-    - By making the execution of cross-chain messages available to anyone, LayerZero ensures that once a message is verified, it can be executed without gatekeepers. This open design removes bottlenecks and facilitates seamless interaction across the blockchain mesh.
+    - Permissionless Execution:
+      - By making the execution of cross-chain messages available to anyone, LayerZero ensures that once a message is verified, it can be executed without gatekeepers. This open design removes bottlenecks and facilitates seamless interaction across the blockchain mesh.
 
 **Together, these elements create a robust foundation that makes the following primitives possible.**
 

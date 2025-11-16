@@ -37,6 +37,9 @@
   - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
   - [Contract Verification](#contract-verification)
   - [Troubleshooting](#troubleshooting)
+    - [Debugging Messages](#debugging-messages)
+      - [Message Execution](#message-execution)
+    - [Error Codes & Handling](#error-codes-&-handling)
 
 ## Prerequisite Knowledge
 ### How does LayerZero work
@@ -607,7 +610,6 @@ pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_K
 ## Troubleshooting
 
 ### Debugging Messages
-<h4>Debugging Messages</h4>
 The V2 protocol now splits the verification and contract logic execution of messages into two separate, distinct phases:
 
 `Verified:` the destination chain has received verification from all configured DVNs and the message nonce has been committed to the Endpoint's messaging channel.
@@ -618,7 +620,7 @@ Because verification and execution are separate, LayerZero can provide specific 
 
 General debugging steps can be found [here](https://docs.layerzero.network/v2/concepts/troubleshooting/debugging-messages).
 
-<h4>Message Execution</h4>
+#### Message Execution
 When your message is successfully delivered to the destination chain, the protocol attempts to execute the message with the execution parameters defined by the sender. Message execution can result in two possible states:
 
 `Success:` If the execution is successful, an event (PacketReceived) is emitted.

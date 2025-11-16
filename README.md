@@ -411,9 +411,9 @@ These instructions are interpreted by the off-chain workers, so that the message
 
 <div style="background-color: #99a0a5ff; border-left: 4px solid #007acc; padding: 10px; margin: 10px 0;">
 
-**Info:** Enforcing options means your application checks that users provide the correct options when calling the Endpoint's send() method. However, this does NOT guarantee that the specified instructions (e.g., gas limits or native drops) will be executed as intended by the worker or respected by permissionless callers on the destination chain.
+**Info:** Enforcing options means your application checks that users provide the correct options when calling the Endpoint's `send()` method. However, this does NOT guarantee that the specified instructions (e.g., gas limits or native drops) will be executed as intended by the worker or respected by permissionless callers on the destination chain.
 
-If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your _lzReceive() or lzCompose() logic.
+If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your `_lzReceive()` or `lzCompose()` logic.
 </div>
 
 ### Generating Options 
@@ -606,5 +606,35 @@ pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_K
 
 ## Troubleshooting
 
-Refer to [Debugging Messages](https://docs.layerzero.network/v2/developers/evm/troubleshooting/debugging-messages) or [Error Codes & Handling](https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
+### Debugging Messages
+<h2>Debugging Messages</h2>
+The V2 protocol now splits the verification and contract logic execution of messages into two separate, distinct phases:
+
+`Verified:` the destination chain has received verification from all configured DVNs and the message nonce has been committed to the Endpoint's messaging channel.
+
+`Delivered:` the message has been successfully executed by the Executor.
+
+Because verification and execution are separate, LayerZero can provide specific error handling for each message state.
+
+General debugging steps can be found [here](https://docs.layerzero.network/v2/concepts/troubleshooting/debugging-messages).
+
+<h2>Message Execution</h2>
+When your message is successfully delivered to the destination chain, the protocol attempts to execute the message with the execution parameters defined by the sender. Message execution can result in two possible states:
+
+`Success:` If the execution is successful, an event (PacketReceived) is emitted.
+
+`Failure:` If the execution fails, the contract reverses the clearing of the payload (re-inserts the payload) and emits an event (LzReceiveAlert) to signal the failure.
+
+  - Out of Gas: The message fails because the transaction that contains the message doesn't provide enough gas for execution.
+
+  - The Message Execution Options applied to a message can be viewed on LayerZero Scan. There are several ways to determine the optimal gas values for these options. See Determining Gas Costs for more details.
+
+  - Logic Error: There's an error in either the contract code or the message parameters passed that prevents the message from being executed correctly.
+
+More information on debugging can be found [here](https://docs.layerzero.network/v2/developers/evm/troubleshooting/debugging-messages). 
+
+
+### Error Codes & Handling
+
+(https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
 # oapp_v2_guide

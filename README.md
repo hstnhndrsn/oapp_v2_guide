@@ -44,7 +44,7 @@
 ## Prerequisite Knowledge
 ### How does LayerZero work
 
-- What is LayerZero?
+<h4>What is LayerZero?</h4>
   - LayerZero is an omnichain messaging protocol — a permissionless, open framework designed to securely move information between blockchains. It empowers any application to bring its own security, execution, and cross-chain interaction, providing a predictable and adaptable foundation for decentralized applications living on multiple networks.
 
 - Before LayerZero

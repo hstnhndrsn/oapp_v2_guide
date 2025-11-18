@@ -44,17 +44,18 @@
 ## Prerequisite Knowledge
 ### How does LayerZero work
 
-- What is LayerZero?
-  - LayerZero is an omnichain messaging protocol — a permissionless, open framework designed to securely move information between blockchains. It empowers any application to bring its own security, execution, and cross-chain interaction, providing a predictable and adaptable foundation for decentralized applications living on multiple networks.
+<h4>What is LayerZero?</h4>
+  LayerZero is an omnichain messaging protocol — a permissionless, open framework designed to securely move information between blockchains. It empowers any application to bring its own security, execution, and cross-chain interaction, providing a predictable and adaptable foundation for decentralized applications living on multiple networks.
 
-- Before LayerZero
+<h4>Before LayerZero</h4>
 
-  - Before LayerZero, cross-chain communication was a patchwork of monolithic bridges and isolated solutions. Achieving true cross-chain communication was a complex and often fragile endeavor.
+  Before LayerZero, cross-chain communication was a patchwork of monolithic bridges and isolated solutions. Achieving true cross-chain communication was a complex and often fragile endeavor.
 
-  - Traditional methods relied on monolithic bridges with centralized verifiers or a fixed set of signers — approaches that imposed rigid structures and created single points of failure. When any component of these systems faltered, every connected application was put at risk, stifling innovation and leaving developers scrambling for secure solutions.
+  Traditional methods relied on monolithic bridges with centralized verifiers or a fixed set of signers — approaches that imposed rigid structures and created single points of failure. When any component of these systems faltered, every connected application was put at risk, stifling innovation and leaving developers scrambling for secure solutions.
 
-- The LayerZero Framework
-  - LayerZero redefines cross-chain interactions by combining several key architectural elements:
+<h4>The LayerZero Framework</h4>
+
+- LayerZero redefines cross-chain interactions by combining several key architectural elements:
 
     - Immutable Smart Contracts:
       - Non-upgradeable endpoint contracts are deployed on each blockchain. These immutable contracts serve as secure entry and exit points for messages, ensuring consistency and trust across all networks.
@@ -295,14 +296,14 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
 ### Security Stack DVNS
-- Security Stack (DVNs)
-  - Every application built on top of the LayerZero protocol can configure a unique messaging channel.
+<h4>Security Stack (DVNs)</h4>
+Every application built on top of the LayerZero protocol can configure a unique messaging channel.
 
-  -Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
+Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
 
-  - Each DVN independently verifies the payloadHash of each message to ensure integrity. Once the designated DVN threshold has been reached, the message nonce can be marked as verified and inserted into the destination Endpoint for execution.
+Each DVN independently verifies the payloadHash of each message to ensure integrity. Once the designated DVN threshold has been reached, the message nonce can be marked as verified and inserted into the destination Endpoint for execution.
 
-  - Each DVN applies its own verification method to check that the payloadHash is correct. Once the required DVNs and optionally a sufficient number of optional DVNs have confirmed the payloadHash, any authorized caller (for example, an Executor) can commit the message nonce into the destination Endpoint’s messaging channel for execution.
+Each DVN applies its own verification method to check that the payloadHash is correct. Once the required DVNs and optionally a sufficient number of optional DVNs have confirmed the payloadHash, any authorized caller (for example, an Executor) can commit the message nonce into the destination Endpoint’s messaging channel for execution.
 
 | Message Nonce | Description |
 |---------------|-------------|
@@ -313,25 +314,25 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 | 5 | Only the required DVNs (e.g. DVNᴬ, DVNᴮ) have verified the payloadHash; none of the optional verifiers have submitted their proof. |
 | 6 | Both the required DVNs and the optional threshold have verified the payloadHash, but no caller has committed the nonce to the Endpoint's messaging channel yet. |
 
-- Verification Model
-  - Each DVN can use its own verification method to confirm that the payloadHash correctly represents the message contents. This design allows application owners to tailor their Security Stack based on the desired security level and cost–efficiency tradeoffs. For an extensive list of DVNs available for integration, see DVN Addresses.
+<h4>Verification Model</h4>
+Each DVN can use its own verification method to confirm that the payloadHash correctly represents the message contents. This design allows application owners to tailor their Security Stack based on the desired security level and cost–efficiency tradeoffs. For an extensive list of DVNs available for integration, see DVN Addresses.
 
-- DVN Adapters
-  - DVN Adapters enable the integration of third-party generic message passing networks, such as native asset bridges, middlechains, or other specialized verification systems. With DVN Adapters, applications can incorporate diverse security models into their Security Stack, broadening the spectrum of available configurations while still ensuring a consistent verification interface via the payloadHash.
+<h4>DVN Adapters</h4>
+DVN Adapters enable the integration of third-party generic message passing networks, such as native asset bridges, middlechains, or other specialized verification systems. With DVN Adapters, applications can incorporate diverse security models into their Security Stack, broadening the spectrum of available configurations while still ensuring a consistent verification interface via the payloadHash.
 
 Since “DVN” broadly describes any verification mechanism that securely delivers a message’s payloadHash to the destination Message Library, application owners have the flexibility to integrate with virtually any infrastructure that meets their security requirements.
 
-- Configuring the Security Stack
-  - Every LayerZero Endpoint can be used to send and receive messages. Because of that, each Endpoint has a separate Send and Receive Configuration, which an OApp can configure per remote Endpoint (i.e., the messaging channel, sending to that remote chain, receiving from that remote chain).
+<h4>Configuring the Security Stack</h4>
+Every LayerZero Endpoint can be used to send and receive messages. Because of that, each Endpoint has a separate Send and Receive Configuration, which an OApp can configure per remote Endpoint (i.e., the messaging channel, sending to that remote chain, receiving from that remote chain).
 
-  - For a configuration to be considered valid, the Send Library configurations on Chain A must match the Receive Library configurations on Chain B.
+For a configuration to be considered valid, the Send Library configurations on Chain A must match the Receive Library configurations on Chain B.
 
-- Default Configuration
-  - For each new channel, LayerZero provides a placeholder configutation known as the default. If you provide no configuration settings, the protocol will fallback to the default configuration.
+<h4>Default Configuration</h4>
+For each new channel, LayerZero provides a placeholder configutation known as the default. If you provide no configuration settings, the protocol will fallback to the default configuration.
 
-  - This default configuration can vary per channel, changing the placeholder block confirmations, the X‑of‑Y‑of‑N thresholds for verification, the Executor, and the message libraries.
+This default configuration can vary per channel, changing the placeholder block confirmations, the X‑of‑Y‑of‑N thresholds for verification, the Executor, and the message libraries.
 
-  - A default pathway configuration will typically have one of the following preset Security Stack configurations within SendULN302 and ReceiveUlN302:
+A default pathway configuration will typically have one of the following preset Security Stack configurations within SendULN302 and ReceiveUlN302:
 
 | Security Stack | DVNs | Executor |
 |---------------|------|----------|
@@ -341,62 +342,62 @@ Since “DVN” broadly describes any verification mechanism that securely deliv
 
 
 ### Message Execution Options
-- Message Options
-  - In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers (like [DVNs](#security-stack-dvns) and [Executors](https://docs.layerzero.network/v2/concepts/permissionless-execution/executors)) can understand.
+<h4>Message Options</h4>
+In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers (like [DVNs](#security-stack-dvns) and [Executors](https://docs.layerzero.network/v2/concepts/permissionless-execution/executors)) can understand.
 
-  - Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
+Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
 
-  - Options are how applications communicate verification and execution preferences to the off-chain workers that carry out cross-chain messages.
+Options are how applications communicate verification and execution preferences to the off-chain workers that carry out cross-chain messages.
 
-- How Does LayerZero Route Options?
-  - When an application sends a message through LayerZero, it includes a field called options. This field is a compact, structured byte array that can contain multiple worker-specific instructions. LayerZero doesn’t interpret these options directly; instead, it forwards them to the appropriate service providers (called workers) that know how to read and act on the instructions.
+<h4>How Does LayerZero Route Options?</h4>
+When an application sends a message through LayerZero, it includes a field called options. This field is a compact, structured byte array that can contain multiple worker-specific instructions. LayerZero doesn’t interpret these options directly; instead, it forwards them to the appropriate service providers (called workers) that know how to read and act on the instructions.
 
-  - The workers typically fall into two categories:
+- The workers typically fall into two categories:
 
-    - Decentralized Verifier Networks (DVNs): These provide verification to ensure the message is valid and has not been tampered with.
+  - Decentralized Verifier Networks (DVNs): These provide verification to ensure the message is valid and has not been tampered with.
 
-    - Executors: These are responsible for delivering and executing the message on the destination chain.
+  - Executors: These are responsible for delivering and executing the message on the destination chain.
 
-  - The LayerZero messaging library understands how to break apart the options and route them to the correct workers. Since applications can configure message libraries, this design is modular, as new types of workers and options can be added over time without changing the core protocol.
+ The LayerZero messaging library understands how to break apart the options and route them to the correct workers. Since applications can configure message libraries, this design is modular, as new types of workers and options can be added over time without changing the core protocol.
 
-- Enforcing Options
-  - Some applications may require strict guarantees on how their messages are handled. Without this enforcement, users could accidentally (or maliciously) send messages that fail to execute, leading to a poor user experience or even stuck tokens.
+<h4>Enforcing Options</h4>
+Some applications may require strict guarantees on how their messages are handled. Without this enforcement, users could accidentally (or maliciously) send messages that fail to execute, leading to a poor user experience or even stuck tokens.
 
-  - To prevent this, applications can enforce options. Enforcement means the application itself verifies and guarantees that a specific set of options is always present and correctly formatted before the message is allowed to be sent.
+To prevent this, applications can enforce options. Enforcement means the application itself verifies and guarantees that a specific set of options is always present and correctly formatted before the message is allowed to be sent.
 
-  - Enforced options helps by:
+- Enforced options helps by:
 
-    - Preventing underfunded executions that would otherwise fail on the destination chain.
+  - Preventing underfunded executions that would otherwise fail on the destination chain.
 
-    - Protecting users who omit critical options for a specific application use case.
+  - Protecting users who omit critical options for a specific application use case.
 
-    - Providing a consistent baseline experience regardless of the sender’s intent.
+  - Providing a consistent baseline experience regardless of the sender’s intent.
 
 This concept is especially important in applications like token bridges, composable smart contracts, or stateful protocols where execution must be predictable and reliable.
 
-- Why would a user want to add extra options?
-  - Take the example of an Omnichain Token (OFT) that supports Omnichain Composability; allowing the token to trigger additional logic after being received. This logic might involve calling another contract, performing swaps, or interacting with a dApp on the destination chain.
+<h4>Why would a user want to add extra options?</h4>
+Take the example of an Omnichain Token (OFT) that supports Omnichain Composability; allowing the token to trigger additional logic after being received. This logic might involve calling another contract, performing swaps, or interacting with a dApp on the destination chain.
 
-  - In this case, the user might want to pay for:
+- In this case, the user might want to pay for:
 
-    - A required amount of gas to ensure lzReceive() succeeds (enforced by the app).
+  - A required amount of gas to ensure lzReceive() succeeds (enforced by the app).
 
-    - Extra gas to support additional post-processing via lzCompose() (added by the user).
+  - Extra gas to support additional post-processing via lzCompose() (added by the user).
 
 By adding these extra options, users pay to extend the functionality without modifying the underlying application logic.
 
-- Why Do Options Matter?
-    - When sending a cross-chain message, the source chain has no direct knowledge of the destination chain’s state: things like how much gas is needed, what the native currency is, or how the contract should be called.
+<h4>Why Do Options Matter?</h4>
+  When sending a cross-chain message, the source chain has no direct knowledge of the destination chain’s state: things like how much gas is needed, what the native currency is, or how the contract should be called.
 
-    - Options solve this by letting the sender provide detailed instructions about how the message should be processed once it arrives.
+  Options solve this by letting the sender provide detailed instructions about how the message should be processed once it arrives.
 
-    - Some common examples include:
+  - Some common examples include:
 
-      - Execution Gas: Telling the Executor how much gas or native token the destination contract will need during lzReceive().
+    - Execution Gas: Telling the Executor how much gas or native token the destination contract will need during lzReceive().
 
-      - Composer Gas: Adding gas or native tokens for the composer contract when calling calling lzCompose().
+    - Composer Gas: Adding gas or native tokens for the composer contract when calling calling lzCompose().
 
-      - Native Token Drops: Sending native tokens (like ETH or APT) separately from the message.
+    - Native Token Drops: Sending native tokens (like ETH or APT) separately from the message.
 
 These instructions are interpreted by the off-chain workers, so that the message is handled as expected.
 

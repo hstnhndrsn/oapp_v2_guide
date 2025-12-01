@@ -771,4 +771,9 @@ More information on debugging can be found [here](https://docs.layerzero.network
 ### Error Codes & Handling
 
 (https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
-# oapp_v2_guide
+
+---
+
+<p align="center">
+  Happy building with LayerZero!
+</p>

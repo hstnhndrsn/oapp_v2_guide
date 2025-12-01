@@ -340,7 +340,8 @@ After deploying the OApp on the respective chains, you must run the wiring task 
 
 First create a new or modify the existing layerzero config file.
 
-`layerzero.config.ts`
+<details>
+<summary><code>layerzero.config.ts</code></summary>
 
 ```typescript
 import {ExecutorOptionType} from '@layerzerolabs/lz-v2-utilities';
@@ -386,7 +387,7 @@ export default async function () {
   };
 }
 ```
-
+</details>
 Run the wiring task:
 
 ```bash

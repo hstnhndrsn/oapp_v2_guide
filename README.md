@@ -74,7 +74,7 @@
 
 
 ### What is an OApp
-
+<details><summary>Understanding the Oapp</summary>
 <h4>Generic Message Passing</h4>
 
 - Send & receive interface:
@@ -132,8 +132,10 @@
 
 - Aptos Move:
   - The Move-based OApp splits the logic into modular components (such as oapp::oapp, oapp::oapp_core, oapp::oapp_receive, and oapp::oapp_compose). Each module encapsulates parts of the messaging process—from fee quoting to message composition—while preserving the same overall flow.
-
+</details>
 ### Example EVM
+<details>
+<summary><code>MyOapp.sol</code></summary>
 
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
@@ -257,6 +259,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     }
 }
 ```
+</details>
 
 ## Requirements
 

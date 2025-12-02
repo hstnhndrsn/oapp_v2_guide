@@ -432,7 +432,7 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
 ### Security Stack DVNS
-<h4>Security Stack (DVNs)</h4>
+<details><summary>The Purpose of the Security Stack (DVNs)</summary>
 Every application built on top of the LayerZero protocol can configure a unique messaging channel.
 
 Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
@@ -475,10 +475,11 @@ A default pathway configuration will typically have one of the following preset 
 | Default Send and Receive A | requiredDVNs: [ Google Cloud, LayerZero Labs ] | LayerZero Labs |
 | Default Send and Receive B | requiredDVNs: [ Polyhedra, LayerZero Labs ] | LayerZero Labs |
 | Default Send and Receive C | requiredDVNs: [ Dead DVN, LayerZero Labs ] | LayerZero Labs |
-
+</summary>
 
 ### Message Execution Options
-<h4>Message Options</h4>
+<details>
+<summary>Message Options</summary>
 In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers can understand.
 
 Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
@@ -555,7 +556,7 @@ These instructions are interpreted by the off-chain workers, so that the message
 
 If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your `_lzReceive()` or `lzCompose()` logic.
 </div>
-
+</details>
 ### Generating Options 
 Generating Options is possible using typescript or solidity as follows: 
 

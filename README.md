@@ -435,6 +435,8 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 <details><summary>The Purpose of the Security Stack (DVNs)</summary>
 
+<br>
+
 Every application built on top of the LayerZero protocol can configure a unique messaging channel.
 
 Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
@@ -483,6 +485,8 @@ A default pathway configuration will typically have one of the following preset 
 
 <details>
 <summary>Message Options</summary>
+
+<br>
 
 In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers can understand.
 

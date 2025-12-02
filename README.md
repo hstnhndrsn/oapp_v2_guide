@@ -17,6 +17,7 @@
 - [Prerequisite Knowledge](#prerequisite-knowledge)
   - [How does LayerZero Work](#how-does-layerzero-work)
   - [What is an OApp](#what-is-an-oapp)
+  - [Example EVM](#example-evm)
 - [Requirements](#requirements)
 - [Scaffold this example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -73,7 +74,7 @@
 
 
 ### What is an OApp
-
+<details><summary>Understanding the Oapp</summary>
 <h4>Generic Message Passing</h4>
 
 - Send & receive interface:
@@ -131,7 +132,135 @@
 
 - Aptos Move:
   - The Move-based OApp splits the logic into modular components (such as oapp::oapp, oapp::oapp_core, oapp::oapp_receive, and oapp::oapp_compose). Each module encapsulates parts of the messaging process—from fee quoting to message composition—while preserving the same overall flow.
+</details>
 
+### Example EVM
+<details>
+<summary><code>MyOapp.sol</code></summary>
+
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.22;
+
+import { OApp, Origin, MessagingFee } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
+contract MyOApp is OApp, OAppOptionsType3 {
+    /// @notice Last string received from any remote chain
+    string public lastMessage;
+
+    /// @notice Msg type for sending a string, for use in OAppOptionsType3 as an enforced option
+    uint16 public constant SEND = 1;
+
+    /// @notice Initialize with Endpoint V2 and owner address
+    /// @param _endpoint The local chain's LayerZero Endpoint V2 address
+    /// @param _owner    The address permitted to configure this OApp
+    constructor(address _endpoint, address _owner) OApp(_endpoint, _owner) Ownable(_owner) {}
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // 0. (Optional) Quote business logic
+    //
+    // Example: Get a quote from the Endpoint for a cost estimate of sending a message.
+    // Replace this to mirror your own send business logic.
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @notice Quotes the gas needed to pay for the full omnichain transaction in native gas or ZRO token.
+     * @param _dstEid Destination chain's endpoint ID.
+     * @param _string The string to send.
+     * @param _options Message execution options (e.g., for sending gas to destination).
+     * @param _payInLzToken Whether to return fee in ZRO token.
+     * @return fee A `MessagingFee` struct containing the calculated gas fee in either the native token or ZRO token.
+     */
+    function quoteSendString(
+        uint32 _dstEid,
+        string calldata _string,
+        bytes calldata _options,
+        bool _payInLzToken
+    ) public view returns (MessagingFee memory fee) {
+        bytes memory _message = abi.encode(_string);
+        // combineOptions (from OAppOptionsType3) merges enforced options set by the contract owner
+        // with any additional execution options provided by the caller
+        fee = _quote(_dstEid, _message, combineOptions(_dstEid, SEND, _options), _payInLzToken);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // 1. Send business logic
+    //
+    // Example: send a simple string to a remote chain. Replace this with your
+    // own state-update logic, then encode whatever data your application needs.
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    /// @notice Send a string to a remote OApp on another chain
+    /// @param _dstEid   Destination Endpoint ID (uint32)
+    /// @param _string  The string to send
+    /// @param _options  Execution options for gas on the destination (bytes)
+    function sendString(uint32 _dstEid, string calldata _string, bytes calldata _options) external payable {
+        // 1. (Optional) Update any local state here.
+        //    e.g., record that a message was "sent":
+        //    sentCount += 1;
+
+        // 2. Encode any data structures you wish to send into bytes
+        //    You can use abi.encode, abi.encodePacked, or directly splice bytes
+        //    if you know the format of your data structures
+        bytes memory _message = abi.encode(_string);
+
+        // 3. Call OAppSender._lzSend to package and dispatch the cross-chain message
+        //    - _dstEid:   remote chain's Endpoint ID
+        //    - _message:  ABI-encoded string
+        //    - _options:  combined execution options (enforced + caller-provided)
+        //    - MessagingFee(msg.value, 0): pay all gas as native token; no ZRO
+        //    - payable(msg.sender): refund excess gas to caller
+        //
+        //    combineOptions (from OAppOptionsType3) merges enforced options set by the contract owner
+        //    with any additional execution options provided by the caller
+        _lzSend(
+            _dstEid,
+            _message,
+            combineOptions(_dstEid, SEND, _options),
+            MessagingFee(msg.value, 0),
+            payable(msg.sender)
+        );
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // 2. Receive business logic
+    //
+    // Override _lzReceive to decode the incoming bytes and apply your logic.
+    // The base OAppReceiver.lzReceive ensures:
+    //   • Only the LayerZero Endpoint can call this method
+    //   • The sender is a registered peer (peers[srcEid] == origin.sender)
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    /// @notice Invoked by OAppReceiver when EndpointV2.lzReceive is called
+    /// @dev   _origin    Metadata (source chain, sender address, nonce)
+    /// @dev   _guid      Global unique ID for tracking this message
+    /// @param _message   ABI-encoded bytes (the string we sent earlier)
+    /// @dev   _executor  Executor address that delivered the message
+    /// @dev   _extraData Additional data from the Executor (unused here)
+    function _lzReceive(
+        Origin calldata /*_origin*/,
+        bytes32 /*_guid*/,
+        bytes calldata _message,
+        address /*_executor*/,
+        bytes calldata /*_extraData*/
+    ) internal override {
+        // 1. Decode the incoming bytes into a string
+        //    You can use abi.decode, abi.decodePacked, or directly splice bytes
+        //    if you know the format of your data structures
+        string memory _string = abi.decode(_message, (string));
+
+        // 2. Apply your custom logic. In this example, store it in `lastMessage`.
+        lastMessage = _string;
+
+        // 3. (Optional) Trigger further on-chain actions.
+        //    e.g., emit an event, mint tokens, call another contract, etc.
+        //    emit MessageReceived(_origin.srcEid, _string);
+    }
+}
+```
+</details>
 
 ## Requirements
 
@@ -215,7 +344,8 @@ After deploying the OApp on the respective chains, you must run the wiring task 
 
 First create a new or modify the existing layerzero config file.
 
-`layerzero.config.ts`
+<details>
+<summary><code>layerzero.config.ts</code></summary>
 
 ```typescript
 import {ExecutorOptionType} from '@layerzerolabs/lz-v2-utilities';
@@ -261,7 +391,7 @@ export default async function () {
   };
 }
 ```
-
+</details>
 Run the wiring task:
 
 ```bash
@@ -302,7 +432,11 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
 ### Security Stack DVNS
-<h4>Security Stack (DVNs)</h4>
+
+<details><summary>The Purpose of the Security Stack (DVNs)</summary>
+
+<br>
+
 Every application built on top of the LayerZero protocol can configure a unique messaging channel.
 
 Multiple DVNs allows each application to configure a unique security threshold for each source and destination, known as X-of-Y-of-N.
@@ -345,10 +479,15 @@ A default pathway configuration will typically have one of the following preset 
 | Default Send and Receive A | requiredDVNs: [ Google Cloud, LayerZero Labs ] | LayerZero Labs |
 | Default Send and Receive B | requiredDVNs: [ Polyhedra, LayerZero Labs ] | LayerZero Labs |
 | Default Send and Receive C | requiredDVNs: [ Dead DVN, LayerZero Labs ] | LayerZero Labs |
-
+</details>
 
 ### Message Execution Options
-<h4>Message Options</h4>
+
+<details>
+<summary>Message Options</summary>
+
+<br>
+
 In the LayerZero protocol, message options are a way for applications to describe how they want their messages to be handled by off-chain infrastructure. These options are passed along with every message sent through LayerZero and are formatted as serialized bytes; a universal language that both the protocol and workers can understand.
 
 Each option acts like an instruction or a setting for a specific worker. For example, you might request that a certain amount of gas / compute units are allocated to execute your message on the destination chain, or that some native tokens be delivered along with the message.
@@ -425,6 +564,7 @@ These instructions are interpreted by the off-chain workers, so that the message
 
 If your application requires strict guarantees, such as an exact gas amount or mandatory native gas drops, you must also validate those conditions on-chain at the destination, or use a worker you trust. See the Integration Checklist for guidance on how to enforce execution requirements inside your `_lzReceive()` or `lzCompose()` logic.
 </div>
+</details>
 
 ### Generating Options 
 Generating Options is possible using typescript or solidity as follows: 
@@ -646,4 +786,9 @@ More information on debugging can be found [here](https://docs.layerzero.network
 ### Error Codes & Handling
 
 (https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
-# oapp_v2_guide
+
+---
+
+<p align="center">
+  Happy building with LayerZero!
+</p>

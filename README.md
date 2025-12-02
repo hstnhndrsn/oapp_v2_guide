@@ -786,8 +786,6 @@ More information on debugging can be found [here](https://docs.layerzero.network
 ### Error Codes & Handling
 <details><summary>Error Messages</summary>
 
-note
-
 This section shows the error that typically occurs when a function is called with parameters that do not match the expected type, range, or format.
 tip
 
@@ -917,6 +915,9 @@ This section shows the error that typically occur when a requested resouce is no
 | DefaultReceiveLibUnavailable() | The error occurs if the receive message library doesn't support the specific endpoint ID. |
 
 </details>
+
+<br>
+
 ---
 
 <p align="center">
